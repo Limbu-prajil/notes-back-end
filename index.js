@@ -97,7 +97,7 @@ app.post('/api/notes', (request, response) => {
     important: body.important || false,
     date: new Date()
   })
-  note
+  Note
     .save()
     .then(formatNote)
     .then(savedAndFormattedNote => {
