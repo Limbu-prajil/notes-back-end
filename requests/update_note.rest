@@ -1,0 +1,6 @@
+PUT https://localhost:3001/api/notes/4
+content-type: application/json
+
+{
+    "content": "VS code rest client is the best.",
+}

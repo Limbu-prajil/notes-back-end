@@ -1,11 +1,11 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const Note = require('./models/note')
 app.use(cors())
 const bodyParser = require('body-parser')
 app.use(bodyParser.json())
 app.use(express.static('build'))
+const Note = require('./models/note')
 
 const formatNote = (note) => {
   return {
@@ -44,7 +44,7 @@ let notes = [
   ]
 
 app.get('/api', (req, res) => {
-  res.send('<h1>Hello Prajil!</h1>')
+  res.send('<h1>Hello Sir!</h1>')
 })
   
 app.get('/api/notes', (req, res) => {
@@ -52,18 +52,11 @@ app.get('/api/notes', (req, res) => {
     .find({}, {__v: 0})
     .then(notes => {
       res.json(notes.map(formatNote))
+      mongoose.connection.close()
     })
 })
 
 app.get('/api/notes/:id', (request, response) => {
-  /* console.log("id come")
-  const id = Number(request.params.id)
-  const note = notes.find(note => note.id === id )
-  if ( note ) {
-    response.json(note)
-  } else {
-    response.status(404).end()
-  } */
   Note
     .findById(request.params.id)
     .then(note => {
@@ -72,20 +65,13 @@ app.get('/api/notes/:id', (request, response) => {
       } else {
         response.status(404).end()
       }
+      mongoose.connection.close()
     })
     .catch(error => {
       console.log(error)
       response.status(400).send({ error: 'malformatted id' })
     })
 })
-
-/* app.post('/api/notes', (request, response) => {
-  const maxId = notes.length > 0 ? notes.map(n => n.id).sort((a,b) => a - b).reverse()[0] : 1
-  const note = request.body
-  note.id = maxId + 1
-  notes = notes.concat(note)
-  response.json(note)
-}) */
 
 app.post('/api/notes', (request, response) => {
   const body = request.body
@@ -97,19 +83,16 @@ app.post('/api/notes', (request, response) => {
     important: body.important || false,
     date: new Date()
   })
-  Note
+  note
     .save()
     .then(formatNote)
     .then(savedAndFormattedNote => {
       response.json(savedAndFormattedNote)
+      mongoose.connection.close()
     })
 })
 
 app.delete('/api/notes/:id', (request, response) => {
-  /* const id = Number(request.params.id)
-  notes = notes.filter(note => note.id !== id)
-  response.status(204).end() */
-
   Note
     .findByIdAndRemove(request.params.id)
     .then(result => {
@@ -118,8 +101,10 @@ app.delete('/api/notes/:id', (request, response) => {
       } else {
         response.status(204).end()
       }
+      mongoose.connection.close()
     })
     .catch(error => {
+      console.log(error)
       response.status(400).send({ error: 'malformatted id' })
     })
 })
@@ -136,6 +121,7 @@ app.put('/api/notes/:id', (request, response) => {
     .findByIdAndUpdate(request.params.id, note, { new: true } )
     .then(updatedNote => {
       response.json(formatNote(updatedNote))
+      mongoose.connection.close()
     })
     .catch(error => {
       console.log(error)
