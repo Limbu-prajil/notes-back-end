@@ -52,7 +52,6 @@ app.get('/api/notes', (req, res) => {
     .find({}, {__v: 0})
     .then(notes => {
       res.json(notes.map(formatNote))
-      mongoose.connection.close()
     })
 })
 
@@ -65,7 +64,6 @@ app.get('/api/notes/:id', (request, response) => {
       } else {
         response.status(404).end()
       }
-      mongoose.connection.close()
     })
     .catch(error => {
       console.log(error)
@@ -88,7 +86,6 @@ app.post('/api/notes', (request, response) => {
     .then(formatNote)
     .then(savedAndFormattedNote => {
       response.json(savedAndFormattedNote)
-      mongoose.connection.close()
     })
 })
 
@@ -101,7 +98,6 @@ app.delete('/api/notes/:id', (request, response) => {
       } else {
         response.status(204).end()
       }
-      mongoose.connection.close()
     })
     .catch(error => {
       console.log(error)
@@ -121,7 +117,6 @@ app.put('/api/notes/:id', (request, response) => {
     .findByIdAndUpdate(request.params.id, note, { new: true } )
     .then(updatedNote => {
       response.json(formatNote(updatedNote))
-      mongoose.connection.close()
     })
     .catch(error => {
       console.log(error)
