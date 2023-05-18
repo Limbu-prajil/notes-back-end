@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const url = 'mongodb+srv://fullstack:MongoDB2022@cluster0.gjtbx.mongodb.net/mydatabase'
+const url = 'mongodb+srv://fullstack:<password>@cluster0.gjtbx.mongodb.net/mydatabase'
 
 mongoose.connect(url)
             .then(()=>{
