@@ -44,7 +44,7 @@ let notes = [
   ]
 
 app.get('/api', (req, res) => {
-  res.send('<h1>Hello Sir!</h1>')
+  res.send('<h1>Hello Sir, Please mind the URI.</h1>')
 })
   
 app.get('/api/notes', (req, res) => {
